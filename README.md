@@ -27,25 +27,10 @@ git@github.com:robokassa/sdk-ios.git
 - Password #2 – пароль для подписи запросов к сервису
 
 Данные можно найти в личном кабинете (ЛК) Robokassa.
-В корне репозитория собран проект состоящий из библиотеки (Robokassa.xcodeproj - для работы с Cocoapods) и демо приложение (Example), которое показывает пример интеграции SDK:
 
 ![screens of example project](https://github.com/robokassa/sdk-ios/blob/main/screens.png)
 
-**Подключение зависимостей**
-
-Для подключения библиотеки в ваш проект, вы можете:
-
-- Установить СДК с помощью Cocoapods. Для этого создайте 'podfile' (для этого введите в терминале команду: pod init), если нет. Если же есть, то впишите туда:
-
-pod 'RobokassaSDK', :git => 'https://github.com/robokassa/sdk-ios.git', :tag => '1.0.0'
-
-- Установить СДК с помощью SPM (Swift Package Manager). Для этого подключите в самом проекте следующим URL (Project -> Package dependencies):
-
-https://github.com/robokassa/sdk-ios.git
-
-*Выберите пункт 'branch' - 'main' в 'Dependency rule'*
- 
-- Либо скачать и подключить SDK. Добавьте его в ваш проект и подключите зависимость в настройках проекта.
+Скачайте и подключите SDK. Добавьте его в ваш проект и подключите зависимость в настройках проекта.
 
 И затем, импортируйте СДК в вашем файле:
 **import RobokassaSDK**
