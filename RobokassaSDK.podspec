@@ -7,18 +7,19 @@ Pod::Spec.new do |spec|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  spec.name           = 'RobokassaSDK'
-  spec.version        = '1.0.0'
-  spec.summary        = 'Robokassa iOS SDK'
-  spec.description    = 'Robokassa SDK позволяет интегрировать прием платежей через сервис Robokassa в мобильное приложение iOS'
-  spec.homepage       = 'https://robokassa.com'
-  spec.license        = 'MIT'
-  spec.author         = { 'Robokassa' => ' support@robokassa.ru' }
-  spec.platform       = :ios, '14.0'
-  spec.source         = { :git => 'https://github.com/madjios/RobokassaSDK.git', :tag => spec.version }
+  spec.name = 'RobokassaSDK'
+  spec.version = '1.0.0'
+  spec.summary = 'Robokassa iOS SDK'
+  spec.description = 'Robokassa SDK позволяет интегрировать прием платежей через сервис Robokassa в мобильное приложение iOS'
+  spec.homepage = 'https://robokassa.com'
+  spec.license = 'MIT'
+  spec.author = { 'Robokassa' => 'support@robokassa.ru' }
+  spec.platform = :ios, '14.0'
+  spec.source = { :git => 'https://github.com/robokassa/sdk-ios.git', :tag => spec.version }
   spec.ios.deployment_target = '14.0'
-  spec.source_files   = 'Robokassa/**/*.{swift}'
+  spec.source_files = 'Robokassa/**/*.{swift}'
   spec.swift_versions = '5.0'
+  spec.resources = ['Robokassa/AssetsResources/ic_robokassa_loader.png']
   
   # spec.exclude_files = "Classes/Exclude"
   # spec.public_header_files = "Classes/**/*.h"

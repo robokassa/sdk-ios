@@ -8,7 +8,7 @@ pod 'RobokassaSDK', :git => 'https://github.com/robokassa/sdk-ios.git', :tag => 
 
 **SPM**:
 
-git@github.com:robokassa/sdk-ios.git
+https://github.com/robokassa/sdk-ios.git
 
 
 ### SDK позволяет интегрировать прием платежей через сервис Robokassa в мобильное приложение iOS. Библиотека написана на языке Swift.
@@ -27,10 +27,25 @@ git@github.com:robokassa/sdk-ios.git
 - Password #2 – пароль для подписи запросов к сервису
 
 Данные можно найти в личном кабинете (ЛК) Robokassa.
+В корне репозитория собран проект состоящий из библиотеки (Robokassa.xcodeproj - для работы с Cocoapods) и демо приложение (Example), которое показывает пример интеграции SDK:
 
 ![screens of example project](https://github.com/robokassa/sdk-ios/blob/main/screens.png)
 
-Скачайте и подключите SDK. Добавьте его в ваш проект и подключите зависимость в настройках проекта.
+**Подключение зависимостей**
+
+Для подключения библиотеки в ваш проект, вы можете:
+
+- Установить СДК с помощью Cocoapods. Для этого создайте 'podfile' (для этого введите в терминале команду: pod init), если нет. Если же есть, то впишите туда:
+
+pod 'RobokassaSDK', :git => 'https://github.com/robokassa/sdk-ios.git', :tag => '1.0.0'
+
+- Установить СДК с помощью SPM (Swift Package Manager). Для этого подключите в самом проекте следующим URL (Project -> Package dependencies):
+
+https://github.com/robokassa/sdk-ios.git
+
+*Выберите пункт 'branch' - 'main' в 'Dependency rule'*
+ 
+- Либо скачать и подключить SDK. Добавьте его в ваш проект и подключите зависимость в настройках проекта.
 
 И затем, импортируйте СДК в вашем файле:
 **import RobokassaSDK**
@@ -102,7 +117,9 @@ let robokassa = Robokassa(
 robokassa.onDimissHandler = {
     print("Robokassa SDK finished its job")
 }
-robokassa.onSuccessHandler = {
+robokassa.onSuccessHandler = { OpKey in
+    // OpKey - идентификатор (токен) для проведения последующих платежей с помощью сохраненной карты
+    // MARK: захватываемое значение OpKey является опциональным и возможно сюда может прийти nil, что в свою очередь перезапишет старое значение в локальном хранилище, а OpKey вы можете хранить только у себя. Для этого советуем прописать условие, чтобы не перезаписать успешно сохраненную рабочую копию OpKey.  
     print("Success: " + "Successfully finished payment")
 }
 robokassa.onFailureHandler = { reason in
@@ -163,4 +180,12 @@ if let previousOrderId = storage.previoudOrderId { // previoudOrderId: Int
 } else {
     robokassa.startDefaultReccurentPayment(with: paymentParams)
 }
+```
+
+- *Оплата по сохраненной карте. Подразумевает с собой возможность проведения последующих платежей с помощью сохраненной карты. Нужно лишь ввести CVV и СМС-код для подтверждения оплаты. OpKey - идентификатор оплаты по карте, полученный после оплаты, например, после проведения простой оплаты, в onSuccessHandler можно захватить OpKey и сохранить в локальном хранилище для дальнейшего использования*
+```swift
+guard let opKey, !opKey.isEmpty else { return }
+
+paymentParams.order.token = opKey
+robokassa.startPaymentBySavedCard(with: params)
 ```

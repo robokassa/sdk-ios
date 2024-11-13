@@ -9,16 +9,18 @@ let package = Package(
         .iOS(.v14)
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "RobokassaSDK",
             targets: ["RobokassaSDK"]
         )
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(name: "RobokassaSDK"),
+        .target(
+            name: "RobokassaSDK",
+            resources: [
+                .process("AssetsResources/ic_robokassa_loader.png")
+            ]
+        ),
         .testTarget(
             name: "RobokassaSDKTests",
             dependencies: ["RobokassaSDK"]
