@@ -74,6 +74,14 @@ final class ViewController: UIViewController {
         return button
     }()
     
+    private let savedCardPaymentButton: Button = {
+        let button = Button()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(RobokassaSDK.PaymentType.savedCard.title, for: .normal)
+        
+        return button
+    }()
+    
     private let robokassa = Robokassa(
         login: "",          // идентификатор (логин) магазина
         password: "",       // пароль для подписи запросов к сервису
@@ -104,6 +112,8 @@ final class ViewController: UIViewController {
         simplePaymentButton.isLoading = false
         holdingButton.isLoading = false
         reccurentPaymentButton.isLoading = false
+        savedCardPaymentButton.isLoading = false
+        savedCardPaymentButton.isEnabled = !storage.opKey.isNilOrEmpty
     }
 
 }
@@ -147,10 +157,16 @@ fileprivate extension ViewController {
             self?.didTapRecurrent()
         }), for: .touchUpInside)
         
+        savedCardPaymentButton.addAction(.init(handler: { [weak self] _ in
+            self?.savedCardPaymentButton.isLoading = true
+            self?.selectedPaymentType = .savedCard
+            self?.didTapPaymentBySavedCard()
+        }), for: .touchUpInside)
+        
         robokassa.onDimissHandler = {
             print("ROBOKASSA SDK DISMISSED")
         }
-        robokassa.onSuccessHandler = { [weak self] in
+        robokassa.onSuccessHandler = { [weak self] token in
             if let type = self?.selectedPaymentType {
                 if type == .reccurentPayment {
                     if let id = Int(self?.textField.text ?? ""), self?.storage.previoudOrderId == nil {
@@ -159,7 +175,13 @@ fileprivate extension ViewController {
                 }
             }
             
-            self?.presentResult(title: "Success", message: "Successfully finished payment")
+            if self?.storage.opKey.isNilOrEmpty == true {
+                self?.storage.opKey = token
+            }
+            
+            DispatchQueue.main.async {
+                self?.presentResult(title: "Success", message: "Successfully finished payment")
+            }
         }
         robokassa.onFailureHandler = { [weak self] reason in
             self?.presentResult(title: "Failure", message: reason)
@@ -226,17 +248,23 @@ fileprivate extension ViewController {
         }
     }
     
+    func didTapPaymentBySavedCard() {
+        var params = createParams()
+        params.order.token = storage.opKey
+        robokassa.startPaymentBySavedCard(with: params)
+    }
+    
     func createParams() -> RobokassaSDK.PaymentParams {
         RobokassaSDK.PaymentParams(
             order: RobokassaSDK.OrderParams(
                 invoiceId: Int(textField.text ?? "") ?? 0,              // Номер инвойса
                 orderSum: 1.0,                                          // Сумма платежа
-                description: "Тестовый  платеж",                        // Описание платежа
+                description: "Тестовый платеж - \(selectedPaymentType?.title ?? "оплата")",                        // Описание платежа
                 expirationDate: Date().dateByAdding(.day, value: 1),
                 receipt: .init(
                     items: [
                         .init(
-                            name: "",       // Наименование товара
+                            name: "Test payment",       // Наименование товара
                             sum: 1.0,       // Сумма товара
                             quantity: 1,    // Кол-во
                             paymentMethod: .fullPayment,
@@ -247,7 +275,7 @@ fileprivate extension ViewController {
             ),
             customer: .init(
                 culture: .ru, email: "john@doe.com"), // Введите свой e-mail
-            view: .init(toolbarText: "Простая оплата", hasToolbar: true)
+            view: .init(toolbarText: "Test", hasToolbar: true)
         )
     }
     
@@ -281,6 +309,7 @@ fileprivate extension ViewController {
         vStack.addArrangedSubview(confirmHoldingButton)
         vStack.addArrangedSubview(cancelHoldingButton)
         vStack.addArrangedSubview(reccurentPaymentButton)
+        vStack.addArrangedSubview(savedCardPaymentButton)
         vStack.setCustomSpacing(32.0, after: textField)
     }
     
