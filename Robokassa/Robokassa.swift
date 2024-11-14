@@ -138,6 +138,10 @@ public final class Robokassa: NSObject {
         webView.stringBody = params.payPostParams(isTest: isTesting)
         webView.params = params
         pushWebView()
+        
+        DispatchQueue.main.async {
+            self.webView.loadWebView()
+        }
     }
 }
 

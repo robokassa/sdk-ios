@@ -74,7 +74,9 @@ public extension PaymentParams {
             }
         }
         
+        result += "&shp_label=sdk_ios"
         signature += ":\(password1)"
+        signature += ":shp_label=sdk_ios"
         
         let signatureValue = md5Hash(signature)
         result += "&SignatureValue=\(signatureValue)"
@@ -144,7 +146,9 @@ public extension PaymentParams {
             }
         }
         
+        result += "&shp_label=sdk_ios"
         signature += ":\(password1)"
+        signature += ":shp_label=sdk_ios"
         
         let signatureValue = md5Hash(signature)
         result += "&SignatureValue=\(signatureValue)"
@@ -235,7 +239,9 @@ public extension PaymentParams {
             result += "&IsTest=1"
         }
         
+        result += "&shp_label=sdk_ios"
         signature += ":\(password1)"
+        signature += ":shp_label=sdk_ios"
         
         let signatureValue = md5Hash(signature)
         result += "&SignatureValue=\(signatureValue)"
@@ -253,6 +259,5 @@ public extension PaymentParams {
         
         // Convert the hash to a hex string
         return digest.map { String(format: "%02x", $0) }.joined()
-
     }
 }

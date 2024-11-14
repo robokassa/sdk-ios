@@ -28,6 +28,8 @@
 		75B7880D2CC2314200B71634 /* ViewParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B787F32CC2314200B71634 /* ViewParams.swift */; };
 		75B7880E2CC2314200B71634 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B787F62CC2314200B71634 /* Endpoint.swift */; };
 		75B7880F2CC2314200B71634 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B787EA2CC2314200B71634 /* Currency.swift */; };
+		75F694232CE623A900869BFB /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F694212CE623A900869BFB /* UIColor+Extensions.swift */; };
+		75F694242CE623A900869BFB /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F694222CE623A900869BFB /* UIView+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,8 @@
 		75B787F82CC2314200B71634 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		75B787FA2CC2314200B71634 /* Robokassa.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Robokassa.swift; sourceTree = "<group>"; };
 		75B787FB2CC2314200B71634 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		75F694212CE623A900869BFB /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
+		75F694222CE623A900869BFB /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +104,8 @@
 			children = (
 				75B787E52CC2314200B71634 /* Date+Extension.swift */,
 				75B787E62CC2314200B71634 /* UIApplication+Extensions.swift */,
+				75F694212CE623A900869BFB /* UIColor+Extensions.swift */,
+				75F694222CE623A900869BFB /* UIView+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -229,6 +235,8 @@
 				75B788082CC2314200B71634 /* Constants.swift in Sources */,
 				75B788092CC2314200B71634 /* WebViewController.swift in Sources */,
 				75B7880A2CC2314200B71634 /* PaymentObject.swift in Sources */,
+				75F694232CE623A900869BFB /* UIColor+Extensions.swift in Sources */,
+				75F694242CE623A900869BFB /* UIView+Extensions.swift in Sources */,
 				75B7880B2CC2314200B71634 /* NetworkManager.swift in Sources */,
 				75B7880C2CC2314200B71634 /* Culture.swift in Sources */,
 				75B7880D2CC2314200B71634 /* ViewParams.swift in Sources */,
