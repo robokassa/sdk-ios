@@ -20,6 +20,29 @@ public struct PaymentParams: BaseParams, Codable {
         self.customer = customer
         self.view = view
     }
+    
+    func set(login: String, pass1: String, pass2: String) -> Self {
+        var updatingParams = self
+        updatingParams.merchantLogin = login
+        updatingParams.password1 = pass1
+        updatingParams.password2 = pass2
+        
+        return updatingParams
+    }
+    
+    func set(isRecurrent: Bool) -> Self {
+        var updatingParams = self
+        updatingParams.order.isRecurrent = isRecurrent
+        
+        return updatingParams
+    }
+    
+    func set(isHolding: Bool) -> Self {
+        var updatingParams = self
+        updatingParams.order.isHold = isHolding
+        
+        return updatingParams
+    }
 }
 
 public extension PaymentParams {
