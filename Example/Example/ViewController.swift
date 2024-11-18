@@ -83,10 +83,10 @@ final class ViewController: UIViewController {
     }()
     
     private let robokassa = Robokassa(
-        login: "",          // идентификатор (логин) магазина
-        password: "",       // пароль для подписи запросов к сервису
-        password2: "",      // пароль для подписи запросов к сервису
-        isTesting: false    // true для указание тестовых запросов. Также если true, то и пароли должны быть тестовыми.
+        login: "ipolh.com",          // идентификатор (логин) магазина
+        password: "o1zCrG7EHdB6TYPkt0K5",       // пароль для подписи запросов к сервису
+        password2: "zgxF4Vf1oAv4k3uR7rZT",      // пароль для подписи запросов к сервису
+        isTesting: true    // true для указание тестовых запросов. Также если true, то и пароли должны быть тестовыми.
     )
     
     private let storage = Storage()

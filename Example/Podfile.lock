@@ -2,21 +2,21 @@ PODS:
   - RobokassaSDK (1.0.0)
 
 DEPENDENCIES:
-  - RobokassaSDK (from `https://github.com/madjios/RobokassaSDK.git`, tag `1.0.0`)
+  - RobokassaSDK (from `https://github.com/robokassa/sdk-ios.git`, tag `1.0.0`)
 
 EXTERNAL SOURCES:
   RobokassaSDK:
-    :git: https://github.com/madjios/RobokassaSDK.git
+    :git: https://github.com/robokassa/sdk-ios.git
     :tag: 1.0.0
 
 CHECKOUT OPTIONS:
   RobokassaSDK:
-    :git: https://github.com/madjios/RobokassaSDK.git
+    :git: https://github.com/robokassa/sdk-ios.git
     :tag: 1.0.0
 
 SPEC CHECKSUMS:
-  RobokassaSDK: 9cf2ae997cd1ce8dc3b9c441a5988d867a708b5c
+  RobokassaSDK: 800d6e6f81bde77512abae36ef7a963fc5988848
 
-PODFILE CHECKSUM: 616c4a2b6fb4a79b1ec926a4e3adac11c556b879
+PODFILE CHECKSUM: 82dd42c35316718f35062779d55c40edaabdd199
 
 COCOAPODS: 1.15.2

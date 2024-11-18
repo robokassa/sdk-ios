@@ -15,7 +15,9 @@
 		75B3FAE82CD21513008D923D /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B3FAE72CD2150B008D923D /* String+Extension.swift */; };
 		75B787D62CB9821000B71634 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B787D52CB9821000B71634 /* Button.swift */; };
 		75B787DA2CB998A600B71634 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B787D92CB998A600B71634 /* Storage.swift */; };
+		75EF06922CE8A55D0091CB65 /* RobokassaSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 75EF06912CE8A55D0091CB65 /* RobokassaSDK */; };
 		75F694272CE623D900869BFB /* RobokassaSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 75F694262CE623D900869BFB /* RobokassaSDK */; };
+		75F6942A2CE75E8500869BFB /* RobokassaSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 75F694292CE75E8500869BFB /* RobokassaSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				75F694272CE623D900869BFB /* RobokassaSDK in Frameworks */,
+				75EF06922CE8A55D0091CB65 /* RobokassaSDK in Frameworks */,
+				75F6942A2CE75E8500869BFB /* RobokassaSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +142,7 @@
 			);
 			mainGroup = 7527916E2CA86A8900FC7571;
 			packageReferences = (
-				75F694252CE623D900869BFB /* XCLocalSwiftPackageReference "../../sdk-ios" */,
+				75EF06902CE8A55D0091CB65 /* XCLocalSwiftPackageReference "../../sdk-ios" */,
 			);
 			productRefGroup = 752791782CA86A8900FC7571 /* Products */;
 			projectDirPath = "";
@@ -399,15 +403,35 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		75F694252CE623D900869BFB /* XCLocalSwiftPackageReference "../../sdk-ios" */ = {
+		75EF06902CE8A55D0091CB65 /* XCLocalSwiftPackageReference "../../sdk-ios" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../sdk-ios";
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		75F694282CE75E8500869BFB /* XCRemoteSwiftPackageReference "sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/robokassa/sdk-ios.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		75EF06912CE8A55D0091CB65 /* RobokassaSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RobokassaSDK;
+		};
 		75F694262CE623D900869BFB /* RobokassaSDK */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = RobokassaSDK;
+		};
+		75F694292CE75E8500869BFB /* RobokassaSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 75F694282CE75E8500869BFB /* XCRemoteSwiftPackageReference "sdk-ios" */;
 			productName = RobokassaSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
