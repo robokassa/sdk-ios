@@ -109,18 +109,16 @@ extension WebViewController: WKNavigationDelegate {
         }
     }
     
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url {
            /*
             Проверка должна быть такой:
-            - если УРЛ начинается с https://auth.robokassa.ru/Merchant/State/
-            - ИЛИ содержит в себе "ipol.tech/"
-            - ИЛИ содержит в себе "ipol.ru/"
+            - если URL начинается с https://auth.robokassa.ru/Merchant/State/
+            - для тестовых платежей с тестовыми вводными, проверяем содержит ли URL 'robokassa.ru/payment/success'
             тогда мы считаем что платеж завершен.
             */
             if url.absoluteString.starts(with: "https://auth.robokassa.ru/Merchant/State/") ||
-                url.absoluteString.contains("ipol.tech/") ||
-                url.absoluteString.contains("ipol.ru/") {
+                url.absoluteString.contains("robokassa.ru/payment/success") {
                 checkPaymentState()
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
@@ -159,7 +157,7 @@ fileprivate extension WebViewController {
     func checkPaymentState() {
         guard let params else { return }
         print(#function)
-        Task { @MainActor in
+        Task { @MainActor [params] in
             do {
                 let result = try await RequestManager.shared.request(to: .checkPaymentStatus(params))
                 
