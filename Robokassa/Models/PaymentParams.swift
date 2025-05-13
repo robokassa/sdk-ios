@@ -250,13 +250,7 @@ public extension PaymentParams {
         if let email = customer.email, !email.isEmpty {
             result += "&Email=\(email)"
         }
-        
-        // User IP
-        if let ip = customer.ip, !ip.isEmpty {
-            result += "&UserIp=\(ip)"
-            signature += ":\(ip)"
-        }
-        
+
         // Test Mode
         if isTest {
             result += "&IsTest=1"
