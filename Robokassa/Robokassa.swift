@@ -45,7 +45,7 @@ public final class Robokassa: NSObject {
         webView.onDismissHandler = { [weak self] in
             self?.onDimissHandler?()
         }
-        webView.onSucccessHandler = { [weak self] token in
+        webView.onSuccessHandler = { [weak self] token in
             self?.onSuccessHandler?(token)
         }
         webView.onFailureHandler = { [weak self] reason in
