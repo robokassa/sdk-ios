@@ -1,4 +1,5 @@
 import UIKit
+import RobokassaSDK
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

@@ -35,7 +35,21 @@ final class WebViewController: UIViewController {
     var onSuccessHandler: ((String?) -> Void)?
     var onFailureHandler: ((String) -> Void)?
     var onDismissHandler: (() -> Void)?
-    
+
+    // MARK: - Init -
+    init(urlPath: String, stringBody: String?, params: PaymentParams, isTesting: Bool = false) {
+        self.urlPath = urlPath
+        self.stringBody = stringBody
+        self.params = params
+        self.isTesting = isTesting
+        print("WebViewController init : \(urlPath)")
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - Lifecycle -
 
     override func viewDidLoad() {
