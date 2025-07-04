@@ -2,36 +2,36 @@ import UIKit
 import WebKit
 
 final class WebViewController: UIViewController {
-    
+
     // MARK: - Properties -
-    
+
     private let container: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white.withAlphaComponent(0.6)
-        
+
         return view
     }()
-    
+
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        
+
         return imageView
     }()
-        
+
     private var webView: WKWebView!
     private var timer: Timer?
-    
+
     private var seconds = 60
-    
+
     var isTesting: Bool = false
-    
+
     var urlPath: String?
     var stringBody: String?
     var params: PaymentParams?
-    
+
     var onSuccessHandler: ((String?) -> Void)?
     var onFailureHandler: ((String) -> Void)?
     var onDismissHandler: (() -> Void)?
@@ -86,27 +86,27 @@ final class WebViewController: UIViewController {
                 print("Resource not found")
             }
         }
-        
+
         configureBackButton()
         embedSubviews()
         setSubviewsConstraints()
         loadWebView()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         container.isHidden = false
         imageView.startRotationAnimation()
     }
-    
+
     func loadWebView() {
         guard let urlPath, !urlPath.isEmpty, let url = URL(string: urlPath) else {
             return
         }
-        
+
         var request = URLRequest(url: url)
-        
+
         if let stringBody, !stringBody.isEmpty {
             request.httpMethod = HTTPMethod.post.rawValue
             request.setValue(Constants.FORM_URL_ENCODED, forHTTPHeaderField: "Content-Type")
@@ -114,7 +114,7 @@ final class WebViewController: UIViewController {
         } else {
             request.httpMethod = HTTPMethod.get.rawValue
         }
-        
+
         webView.load(request)
     }
 
@@ -132,28 +132,6 @@ extension WebViewController: WKNavigationDelegate {
             }
         }
     }
-
-//    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-//        if let url = navigationAction.request.url {
-//            /*
-//             Проверка должна быть такой:
-//             - если URL начинается с https://auth.robokassa.ru/Merchant/State/
-//             - для тестовых платежей с тестовыми вводными, проверяем содержит ли URL 'robokassa.ru/payment/success'
-//             тогда мы считаем что платеж завершен.
-//             */
-//            if url.absoluteString.starts(with: "https://auth.robokassa.ru/Merchant/State/") ||
-//                url.absoluteString.contains("robokassa.ru/payment/success") {
-//                checkPaymentState()
-//
-//                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-//                    if let timer = self.timer, timer.isValid == true {
-//                        self.startTimer()
-//                    }
-//                }
-//            }
-//        }
-//        decisionHandler(.allow)
-//    }
 
     func webView(_ webView: WKWebView,
                  decidePolicyFor navigationAction: WKNavigationAction,
@@ -343,10 +321,10 @@ fileprivate extension WebViewController {
                 self?.invalidateTimer()
                 return
             }
-            
+
             if self.seconds > 0 {
                 self.seconds -= 1
-                
+
                 if self.seconds % 2 == 0 {
                     checkPaymentState()
                 }
@@ -355,11 +333,11 @@ fileprivate extension WebViewController {
             }
         }
     }
-    
+
     func checkPaymentState() {
         ServiceCheckPaymentStatus.shared.checkPaymentStatus()
     }
-    
+
     func handleFailureState(_ result: [String: Any]) {
         do {
             let data = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
@@ -369,7 +347,7 @@ fileprivate extension WebViewController {
             onFailureHandler?("Could not parse any Data")
         }
     }
-    
+
     func invalidateTimer() {
         timer?.invalidate()
         timer = nil
@@ -381,13 +359,13 @@ fileprivate extension WebViewController {
 fileprivate extension WebViewController {
     func configureBackButton() {
         navigationItem.leftBarButtonItem = .init(
-            image: .init(systemName: "chevron.left"), 
+            image: .init(systemName: "chevron.left"),
             style: .plain,
             target: self,
             action: #selector(didTapBack)
         )
     }
-    
+
     @objc func didTapBack() {
         if (navigationController?.viewControllers ?? []).count == 1 {
             navigationController?.dismiss(animated: true) { [weak self] in
@@ -409,7 +387,7 @@ fileprivate extension WebViewController {
         view.addSubviews(webView, container)
         container.addSubview(imageView)
     }
-    
+
     func setSubviewsConstraints() {
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

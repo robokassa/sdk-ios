@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if !hasShownSuccessPayment {
                 ServiceCheckPaymentStatus.shared.checkPaymentStatus()
                 ServiceCheckPaymentStatus.shared.onSuccessHandler = { [weak self] info in
-                    self?.presentResult(title: "Успешная оплата", message: "Оплата успешно завершена!\(info ?? "N/A")")
+                    self?.presentResult(title: "Успешная оплата", message: "Оплата успешно завершена! \(info ?? "N/A")")
                     Storage().hasShownSuccessPayment = true
                 }
                 ServiceCheckPaymentStatus.shared.onFailureHandler = { [weak self] errorMessage in
