@@ -116,6 +116,11 @@ public final class Robokassa: NSObject {
     }
     
     public func startPaymentBySavedCard(with params: PaymentParams) {
+
+        ServiceCheckPaymentStatus.shared.saveBodyStringForCheckStatusUrl(params)
+        ServiceCheckPaymentStatus.shared.updateHasShownSuccessPayment()
+        ServiceCheckPaymentStatus.shared.updateCurrentInvoiceId(params.order.invoiceId)
+
         let modifiedParams = params.set(login: login, pass1: password, pass2: password2)
         webView.urlPath = Constants.savedPayment
         webView.stringBody = modifiedParams.payPostParams(isTest: isTesting)

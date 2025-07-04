@@ -18,8 +18,8 @@ final class ViewController: UIViewController {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "ic-logo")
-        
+        imageView.image = UIImage(named: "logo_robokassa_black")
+
         return imageView
     }()
     

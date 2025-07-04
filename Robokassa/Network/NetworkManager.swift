@@ -15,34 +15,64 @@ enum RequestError: Error {
 }
 
 final class XMLParserDelegateImplementation: NSObject, XMLParserDelegate {
-    var currentElement = ""
-    var currentValue = ""
-    
+    private var dictionaryStack: [[String: Any]] = []
+    private var currentText: String = ""
+
     private(set) var dictionary: [String: Any] = [:]
-    
-    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-        currentElement = elementName
-        currentValue = ""
+
+    func parserDidStartDocument(_ parser: XMLParser) {
+        dictionaryStack = [[:]]
     }
-    
+
+    func parser(_ parser: XMLParser,
+                didStartElement elementName: String,
+                namespaceURI: String?,
+                qualifiedName qName: String?,
+                attributes attributeDict: [String : String] = [:]) {
+
+        var newElement: [String: Any] = attributeDict
+        newElement["_elementName"] = elementName
+
+        dictionaryStack.append(newElement)
+        currentText = ""
+    }
+
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        currentValue += string
+        currentText += string.trimmingCharacters(in: .whitespacesAndNewlines)
     }
-    
-    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
-        dictionary[elementName] = currentValue
+
+    func parser(_ parser: XMLParser,
+                didEndElement elementName: String,
+                namespaceURI: String?,
+                qualifiedName qName: String?) {
+
+        var lastElement = dictionaryStack.removeLast()
+
+        if !currentText.isEmpty {
+            lastElement["_value"] = currentText
+            currentText = ""
+        }
+
+        if var parent = dictionaryStack.popLast() {
+            var children = parent["_children"] as? [[String: Any]] ?? []
+            children.append(lastElement)
+            parent["_children"] = children
+            dictionaryStack.append(parent)
+        }
     }
-    
+
     func parserDidEndDocument(_ parser: XMLParser) {
-        // Создание объекта из распарсенного словаря
-        if let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted) {
-            print("XML PARSER:\n" + String(data: jsonData, encoding: .utf8)!)
+        if let root = dictionaryStack.first {
+            dictionary = root
+            if let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: .prettyPrinted) {
+                print("XML PARSER:\n" + String(data: jsonData, encoding: .utf8)!)
+            }
         }
     }
 }
 
 final class RequestManager {
-    static let shared = RequestManager()
+    @MainActor static let shared = RequestManager()
 
     private init() {}
     
@@ -72,7 +102,38 @@ final class RequestManager {
             throw error
         }
     }
-    
+    func requestForCheckStatus(to checkGenParameters: String?) async throws -> [String: Any] {
+         do {
+             let data = try await requestForCheckState(checkGenParameters: checkGenParameters)
+             return xmlToObject(data: data)
+         } catch {
+             throw error
+         }
+     }
+
+     func getStateCode(from dict: [String: Any], _ stateValue: String) -> String? {
+         // Ищем State
+         if let elementName = dict["_elementName"] as? String, elementName == stateValue {
+             if let children = dict["_children"] as? [[String: Any]] {
+                 for child in children {
+                     if let name = child["_elementName"] as? String, name == "Code",
+                        let value = child["_value"] as? String {
+                         return value
+                     }
+                 }
+             }
+         }
+         // Рекурсивно ищет вложенные данные
+         if let children = dict["_children"] as? [[String: Any]] {
+             for child in children {
+                 if let found = getStateCode(from: child, stateValue) {
+                     return found
+                 }
+             }
+         }
+         return nil
+     }
+
     func request(to endpoint: Endpoint) async throws -> [String: Any] {
         do {
             let data = try await requestTo(endpoint: endpoint)
@@ -95,6 +156,33 @@ final class RequestManager {
             return [:]
         }
     }
+
+    private func requestForCheckState(checkGenParameters: String?) async throws -> Data {
+         guard let url = URL(string: Constants.checkPayment) else {
+             throw RequestError.invalidURL
+         }
+
+         var request = URLRequest(url: url)
+         request.httpMethod = "POST"
+
+         if let stringBody = checkGenParameters {
+             request.setValue(Constants.FORM_URL_ENCODED, forHTTPHeaderField: "Content-Type")
+             request.httpBody = stringBody.data(using: .utf8)
+         }
+
+         Logger().log(request: request)
+
+         let (data, response) = try await URLSession.shared.data(for: request)
+
+         guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+             print("-------- FAILED IN RESPONSE. STATUS CODE is \((response as? HTTPURLResponse)?.statusCode ?? 0)")
+             throw RequestError.invalidResponse
+         }
+
+         Logger().log(response: httpResponse, data: data)
+
+         return data
+     }
 
     private func requestTo(endpoint: Endpoint) async throws -> Data {
         guard let url = URL(string: endpoint.url) else {
