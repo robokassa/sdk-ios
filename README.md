@@ -47,7 +47,7 @@ https://github.com/robokassa/sdk-ios.git
 
 - Установить СДК с помощью Cocoapods. Для этого создайте 'podfile' (для этого введите в терминале команду: pod init), если нет. Если же есть, то впишите туда:
 
-pod 'RobokassaSDK', :git => 'https://github.com/robokassa/sdk-ios.git', :tag => '1.0.0'
+pod 'RobokassaSDK', :git => 'https://github.com/robokassa/sdk-ios.git', :branch => 'main'
 
 - Установить СДК с помощью SPM (Swift Package Manager). Для этого подключите в самом проекте следующим URL (Project -> Package dependencies):
 
