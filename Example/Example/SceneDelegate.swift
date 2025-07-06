@@ -1,4 +1,5 @@
 import UIKit
+import RobokassaSDK
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -21,13 +22,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        print("📤📤📤 Приложение стало активным в \(Date())")
+        if let hasShownSuccessPayment = Storage().hasShownSuccessPayment {
+
+            if !hasShownSuccessPayment {
+                ServiceCheckPaymentStatus.shared.checkPaymentStatus()
+                ServiceCheckPaymentStatus.shared.onSuccessHandler = { [weak self] info in
+                    self?.presentResult(title: "Успешная оплата", message: "Оплата успешно завершена! \(info ?? "N/A")")
+                    Storage().hasShownSuccessPayment = true
+                }
+                ServiceCheckPaymentStatus.shared.onFailureHandler = { [weak self] errorMessage in
+                    self?.presentResult(title: "Уведомление", message: errorMessage)
+                }
+            } else {
+                print("🔥 Уведомление об успехе уже показано 🔥")
+            }
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
+        print("📤 Приложение ушло в фоновый режим в \(Date())")
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -40,7 +54,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
+    private func presentResult(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        if let navController = window?.rootViewController as? UINavigationController,
+           let topController = navController.topViewController {
+            topController.present(alert, animated: true)
+        } else if let topController = UIApplication.shared.windows.first?.rootViewController {
+            topController.present(alert, animated: true)
+        }
+    }
 
 }
 

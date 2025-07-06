@@ -21,110 +21,101 @@ public enum PaymentType {
 }
 
 public final class Robokassa: NSObject {
-    private let webView = WebViewController()
-    
     private(set) var login: String
     private(set) var password: String
     private(set) var password2: String
     private(set) var isTesting: Bool
-        
+
     public var onDimissHandler: (() -> Void)?
     public var onSuccessHandler: ((String?) -> Void)?
     public var onFailureHandler: ((String) -> Void)?
-    
+
     public init(login: String, password: String, password2: String, isTesting: Bool = false) {
         self.login = login
         self.password = password
         self.password2 = password2
         self.isTesting = isTesting
-        
-        super.init()
-        
-        webView.isTesting = isTesting
-        
-        webView.onDismissHandler = { [weak self] in
-            self?.onDimissHandler?()
-        }
-        webView.onSucccessHandler = { [weak self] token in
-            self?.onSuccessHandler?(token)
-        }
-        webView.onFailureHandler = { [weak self] reason in
-            self?.onFailureHandler?(reason)
-        }
     }
-    
+
     public func startSimplePayment(with params: PaymentParams) {
         fetchInvoice(with: params)
-        pushWebView()
     }
-    
+
     public func startHoldingPayment(with params: PaymentParams) {
-        let modifiedParams = params.set(isHolding: true)
-        fetchInvoice(with: modifiedParams)
-        pushWebView()
+        var params = params
+        params.order.isHold = true
+        fetchInvoice(with: params)
     }
-    
+
     public func confirmHoldingPayment(with params: PaymentParams, completion: @escaping (Result<Bool, Error>) -> Void) {
-        let modifiedParams = params
-            .set(login: login, pass1: password, pass2: password2)
-            .set(isHolding: true)
-        requestConfirmHoldingPayment(with: modifiedParams, completion: completion)
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        params.order.isHold = true
+        requestConfirmHoldingPayment(with: params, completion: completion)
     }
-    
+
     public func confirmHoldingPayment(with params: PaymentParams) async throws -> Bool {
-        let modifiedParams = params
-            .set(login: login, pass1: password, pass2: password2)
-            .set(isHolding: true)
-        
-        return try await requestConfirmHoldingPayment(with: modifiedParams)
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        params.order.isHold = true
+
+        return try await requestConfirmHoldingPayment(with: params)
     }
-    
+
     public func cancelHoldingPayment(with params: PaymentParams, completion: @escaping (Result<Bool, Error>) -> Void) {
-        let modifiedParams = params
-            .set(login: login, pass1: password, pass2: password2)
-            .set(isHolding: true)
-        requestHoldingPaymentCancellation(with: modifiedParams, completion: completion)
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        params.order.isHold = true
+        requestHoldingPaymentCancellation(with: params, completion: completion)
     }
-    
+
     public func cancelHoldingPayment(with params: PaymentParams) async throws -> Bool {
-        let modifiedParams = params
-            .set(login: login, pass1: password, pass2: password2)
-            .set(isHolding: true)
-        
-        return try await requestHoldingPaymentCancellation(with: modifiedParams)
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        params.order.isHold = true
+
+        return try await requestHoldingPaymentCancellation(with: params)
     }
-    
+
     public func startDefaultReccurentPayment(with params: PaymentParams) {
-        let modifiedParams = params.set(isRecurrent: true)
-        fetchInvoice(with: modifiedParams)
-        pushWebView()
+        var params = params
+        params.order.isRecurrent = true
+        fetchInvoice(with: params)
     }
-    
+
     public func startReccurentPayment(with params: PaymentParams, completion: @escaping (Result<Bool, Error>) -> Void) {
-        let modifiedParams = params
-            .set(login: login, pass1: password, pass2: password2)
-            .set(isRecurrent: true)
-        requestRecurrentPayment(with: modifiedParams, completion: completion)
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        params.order.isRecurrent = true
+        requestRecurrentPayment(with: params, completion: completion)
     }
-    
+
     public func startReccurentPayment(with params: PaymentParams) async throws -> Bool {
-        let modifiedParams = params
-            .set(login: login, pass1: password, pass2: password2)
-            .set(isRecurrent: true)
-        
-        return try await requestRecurrentPayment(with: modifiedParams)
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        params.order.isRecurrent = true
+
+        return try await requestRecurrentPayment(with: params)
     }
-    
-    public func startPaymentBySavedCard(with params: PaymentParams) {
-        let modifiedParams = params.set(login: login, pass1: password, pass2: password2)
-        webView.urlPath = Constants.savedPayment
-        webView.stringBody = modifiedParams.payPostParams(isTest: isTesting)
-        webView.params = modifiedParams
-        pushWebView()
-        
-        DispatchQueue.main.async {
-            self.webView.loadWebView()
-        }
+
+     public func startPaymentBySavedCard(with params: PaymentParams) {
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+        pushWebView(with: Constants.savedPayment, stringBody: params.payPostParams(isTest: isTesting), params: params)
     }
 }
 
@@ -132,20 +123,21 @@ public final class Robokassa: NSObject {
 
 fileprivate extension Robokassa {
     func fetchInvoice(with params: PaymentParams) {
-        let modifiedParams = params.set(login: login, pass1: password, pass2: password2)
-        
-        Task { @MainActor [modifiedParams] in
+        var params = params
+        params.merchantLogin = login
+        params.password1 = password
+        params.password2 = password2
+
+        Task { @MainActor in
             do {
-                let result = try await RequestManager.shared.request(to: .getInvoice(modifiedParams, isTesting), type: Invoice.self)
-                webView.urlPath = Constants.simplePayment + result.invoiceID
-                webView.params = modifiedParams
-                webView.loadWebView()
+                let result = try await RequestManager.shared.request(to: .getInvoice(params, isTesting), type: Invoice.self)
+                pushWebView(with: Constants.simplePayment + result.invoiceID, params: params)
             } catch {
                 print(error.localizedDescription)
             }
         }
     }
-    
+
     func requestConfirmHoldingPayment(with params: PaymentParams, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task { @MainActor in
             do {
@@ -158,18 +150,18 @@ fileprivate extension Robokassa {
             }
         }
     }
-    
+
     func requestConfirmHoldingPayment(with params: PaymentParams) async throws -> Bool {
         let response = try await RequestManager.shared.request(to: .confirmHoldPayment(params), type: String.self)
         return response.lowercased().contains("true")
     }
-    
+
     func requestHoldingPaymentCancellation(with params: PaymentParams, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task { @MainActor in
             do {
                 let response = try await RequestManager.shared.request(to: .cancelHoldPayment(params), type: String.self)
                 let isSuccess = response.lowercased().contains("true")
-                
+
                 if isSuccess {
                     completion(.success(isSuccess))
                 } else {
@@ -181,24 +173,24 @@ fileprivate extension Robokassa {
             }
         }
     }
-    
+
     func requestHoldingPaymentCancellation(with params: PaymentParams) async throws -> Bool {
         let response = try await RequestManager.shared.request(to: .cancelHoldPayment(params), type: String.self)
         let isSuccess = response.lowercased().contains("true")
-        
+
         if isSuccess {
             return isSuccess
         } else {
             throw MessagedError(message: response)
         }
     }
-    
+
     func requestRecurrentPayment(with params: PaymentParams, completion: @escaping (Result<Bool, Error>) -> Void) {
         Task { @MainActor in
             do {
                 let response = try await RequestManager.shared.requestToGetString(to: .reccurentPayment(params))
                 let isSuccess = response.lowercased().contains("ok")
-                
+
                 if isSuccess {
                     completion(.success(isSuccess))
                 } else {
@@ -210,19 +202,36 @@ fileprivate extension Robokassa {
             }
         }
     }
-    
+
     func requestRecurrentPayment(with params: PaymentParams) async throws -> Bool {
         let response = try await RequestManager.shared.requestToGetString(to: .reccurentPayment(params))
         let isSuccess = response.lowercased().contains("ok")
-        
+
         if isSuccess {
             return isSuccess
         } else {
             throw MessagedError(message: response)
         }
     }
-    
-    func pushWebView() {
+
+
+     func pushWebView(with urlPath: String, stringBody: String? = nil, params: PaymentParams) {
+
+        ServiceCheckPaymentStatus.shared.saveBodyStringForCheckStatusUrl(params)
+        ServiceCheckPaymentStatus.shared.updateHasShownSuccessPayment()
+        ServiceCheckPaymentStatus.shared.updateCurrentInvoiceId(params.order.invoiceId)
+
+        let webView = WebViewController(urlPath: urlPath, stringBody: stringBody, params: params, isTesting: isTesting)
+        webView.onDismissHandler = { [weak self] in
+            self?.onDimissHandler?()
+        }
+        webView.onSuccessHandler = { [weak self] token in
+            self?.onSuccessHandler?(token)
+        }
+        webView.onFailureHandler = { [weak self] reason in
+            self?.onFailureHandler?(reason)
+        }
+
         if UIApplication.shared.topViewController()?.navigationController == nil {
             let navController = UINavigationController(rootViewController: webView)
             webView.modalTransitionStyle = .crossDissolve

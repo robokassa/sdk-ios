@@ -2,6 +2,34 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.yourname.robokassaSDK.example</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>sberpay</string>
+		<string>tinkoff</string>
+		<string>sbp</string>
+		<string>intent</string>
+		<string>bank100000000150</string>
+		<string>bank100000000111</string>
+		<string>bank100000000017</string>
+		<string>bank100000000004</string>
+		<string>bank100000000005</string>
+		<string>bank100000000008</string>
+		<string>bank100000000007</string>
+		<string>bank100000000015</string>
+		<string>bank100000000001</string>
+		<string>bank100000000010</string>
+		<string>bank100000000013</string>
+		<string>bank100000000012</string>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

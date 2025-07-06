@@ -18,8 +18,8 @@ final class ViewController: UIViewController {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "ic-logo")
-        
+        imageView.image = UIImage(named: "logo_robokassa_black")
+
         return imageView
     }()
     
@@ -258,14 +258,14 @@ fileprivate extension ViewController {
         RobokassaSDK.PaymentParams(
             order: RobokassaSDK.OrderParams(
                 invoiceId: Int(textField.text ?? "") ?? 0,              // Номер инвойса
-                orderSum: 1.0,                                          // Сумма платежа
+                orderSum: 10.0,                                          // Сумма платежа
                 description: "Тестовый платеж - \(selectedPaymentType?.title ?? "оплата")",                        // Описание платежа
                 expirationDate: Date().dateByAdding(.day, value: 1),
                 receipt: .init(
                     items: [
                         .init(
                             name: "Test payment",       // Наименование товара
-                            sum: 1.0,       // Сумма товара
+                            sum: 10.0,       // Сумма товара
                             quantity: 1,    // Кол-во
                             paymentMethod: .fullPayment,
                             tax: .NONE

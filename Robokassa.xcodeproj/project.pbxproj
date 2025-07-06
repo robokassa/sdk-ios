@@ -30,6 +30,8 @@
 		75B7880F2CC2314200B71634 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75B787EA2CC2314200B71634 /* Currency.swift */; };
 		75F694232CE623A900869BFB /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F694212CE623A900869BFB /* UIColor+Extensions.swift */; };
 		75F694242CE623A900869BFB /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75F694222CE623A900869BFB /* UIView+Extensions.swift */; };
+		92836CCC2E18287200767D69 /* ServiceCheckPaymentStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92836CCB2E18286E00767D69 /* ServiceCheckPaymentStatus.swift */; };
+		92836CCE2E1829FF00767D69 /* ScriptMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92836CCD2E1829FD00767D69 /* ScriptMessageHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +59,8 @@
 		75B787FB2CC2314200B71634 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		75F694212CE623A900869BFB /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		75F694222CE623A900869BFB /* UIView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		92836CCB2E18286E00767D69 /* ServiceCheckPaymentStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCheckPaymentStatus.swift; sourceTree = "<group>"; };
+		92836CCD2E1829FD00767D69 /* ScriptMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptMessageHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +136,8 @@
 		75B787F92CC2314200B71634 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				92836CCD2E1829FD00767D69 /* ScriptMessageHandler.swift */,
+				92836CCB2E18286E00767D69 /* ServiceCheckPaymentStatus.swift */,
 				75B787F52CC2314200B71634 /* Constants.swift */,
 				75B787F62CC2314200B71634 /* Endpoint.swift */,
 				75B787F72CC2314200B71634 /* Logger.swift */,
@@ -240,6 +246,8 @@
 				75B7880B2CC2314200B71634 /* NetworkManager.swift in Sources */,
 				75B7880C2CC2314200B71634 /* Culture.swift in Sources */,
 				75B7880D2CC2314200B71634 /* ViewParams.swift in Sources */,
+				92836CCC2E18287200767D69 /* ServiceCheckPaymentStatus.swift in Sources */,
+				92836CCE2E1829FF00767D69 /* ScriptMessageHandler.swift in Sources */,
 				75B7880E2CC2314200B71634 /* Endpoint.swift in Sources */,
 				75B7880F2CC2314200B71634 /* Currency.swift in Sources */,
 			);
